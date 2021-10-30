@@ -24,26 +24,22 @@ async function getAllProducts() {
             let productDescription = product.description;
 
             let card = `
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                    <div class="card m-3 rounded-3 h-20 shadow-sm text-center ">
-                    <h3 class="card-header text-white bg-danger">${productName}</h3>    
-                    <img
-                            class="img-fluid p-3"
-                            src="${productImageURL}"
-                            alt=""
-                        />
-                        <div class="product-caption">
-                            <div class="single_product_text text-center">
-                                
-
-                                <div class="card_area">
-                                    <div class="product_count_area">
-                                        <p>$ ${productPrice}</p>
-                                    </div>
-                                    <div id="prodID_${productID}" class="card-footer text-white bg-primary">
-                                        <span>Add to cart</span>
-                                        <i class="fas fa-cart-plus "></i>
-                                    </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 card-deck">
+                    <div class="card my-3 rounded-3 shadow-sm text-center ">
+                        <div class="card-title text-white p-2 bg-danger">${productName}</div>    
+                        <img
+                                class="card-img-center w-auto p-5 mh-100"
+                                src="${productImageURL}"
+                                alt=""
+                            />
+                        <div class="card-body product-caption">
+                            <div class="card_area">
+                                <div class="product_count_area">
+                                    <p>$ ${productPrice}</p>
+                                </div>
+                                <div id="prodID_${productID}" class="card-footer text-white bg-primary">
+                                    <span>Add to cart</span>
+                                    <i class="fas fa-cart-plus "></i>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +105,7 @@ const teste = () => {
             });
         });
     }
-}
+};
 
 var myModal = document.getElementById("myModal");
 var myInput = document.getElementById("myInput");
@@ -117,5 +113,3 @@ var myInput = document.getElementById("myInput");
 myModal.addEventListener("shown.bs.modal", function () {
     myInput.focus();
 });
-
-
