@@ -18,3 +18,4 @@
 
 - [ ] Review variables/functions naming standard
 - [ ] Check how to organize code
+- [ ] Add google analytics
