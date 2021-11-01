@@ -1,3 +1,6 @@
+//IMPORTANT NOTE:
+//The POST/PUT/DELETE methods will NOT change database
+
 async function getAllUsers() {
     let users;
     const errorMessage =
@@ -10,6 +13,7 @@ async function getAllUsers() {
         .then((response) => response.json())
         .then((data) => (users = data))
         .catch((_) => console.log(errorMessage));
+    console.log(users);
     return users;
 }
 
@@ -25,6 +29,7 @@ async function getAllProducts() {
         .then((response) => response.json())
         .then((data) => (products = data))
         .catch((_) => console.log(errorMessage));
+    console.log(products);
     return products;
 }
 
@@ -40,6 +45,7 @@ async function getProduct(productID) {
         .then((response) => response.json())
         .then((data) => (product = data))
         .catch((_) => console.log(errorMessage));
+    console.log(product);
     return product;
 }
 
@@ -55,6 +61,7 @@ async function getAllCategories() {
         .then((response) => response.json())
         .then((data) => (categories = data))
         .catch((_) => console.log(errorMessage));
+    console.log(categories);
     return categories;
 }
 
@@ -70,6 +77,7 @@ async function getProductsInCategory(category) {
         .then((response) => response.json())
         .then((data) => (productsInCategory = data))
         .catch((_) => console.log(errorMessage));
+    console.log(productsInCategory);
     return productsInCategory;
 }
 
@@ -85,6 +93,7 @@ async function getAllCarts() {
         .then((response) => response.json())
         .then((data) => (carts = data))
         .catch((_) => console.log(errorMessage));
+    console.log(carts);
     return carts;
 }
 
@@ -100,13 +109,46 @@ async function getSingleCart(cartID) {
         .then((response) => response.json())
         .then((data) => (singleCart = data))
         .catch((_) => console.log(errorMessage));
+    console.log(singleCart)
     return singleCart;
 }
 
-console.log(getAllUsers());
-console.log(getAllProducts());
-console.log(getProduct(1));
-console.log(getAllCategories());
-console.log(getProductsInCategory("electronics"));
-console.log(getAllCarts());
-console.log(getSingleCart(1)); 
+async function getUserCart(userId) {
+    let userCard;
+    const errorMessage =
+        "<p>We don't currently have any items in stock, but feel free to add your own product/s </p>";
+
+    await fetch("https://fakestoreapi.com/carts/user/" + userId, {
+        method: "GET",
+        mode: "cors",
+    })
+        .then((response) => response.json())
+        .then((data) => (userCard = data))
+        .catch((_) => console.log(errorMessage));
+    console.log(userCard)
+    return userCard;
+}
+
+async function addNewCart(userId) {
+    let cart;
+    const errorMessage =
+        "<p>We don't currently have any items in stock, but feel free to add your own product/s </p>";
+
+    await fetch("https://fakestoreapi.com/carts/", {
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify({
+            userId: userId,
+            date:2020-02-03,
+            products:[{productId:5,quantity:1},{productId:1,quantity:5}]
+            // date: new Date().toISOString().slice(0, 10),
+            // products: [],
+        }),
+    })
+        .then((response) => response.json())
+        .then((body) => (cart = body))
+        .catch((_) => console.log(errorMessage));
+    console.log(cart)
+    return cart;
+}
+

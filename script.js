@@ -1,18 +1,11 @@
 let products = [];
+let cards = [];
+let cardContainer = document.querySelector("#card-container");
+let categoryMenu = document.querySelector("#dropdown-menu");
 // Function to talk to the server and return a bunch of products
-async function getAllProducts() {
-    let cards = [];
-    const errorMessage =
-        "<p>We don't currently have any items in stock, but feel free to add your own product/s </p>";
-
-    await fetch("https://fakestoreapi.com/products", {
-        method: "GET",
-        mode: "cors",
-    })
-        .then((response) => response.json())
-        .then((data) => (products = data))
-        .catch((_) => cards.push(errorMessage));
-
+async function updateCards(productList) {
+    cards = [];
+    let products = await productList;
     if (products.length > 0 && cards.length < 1) {
         for (const index in products) {
             let product = products[index];
@@ -37,7 +30,7 @@ async function getAllProducts() {
                                 <div class="product_count_area">
                                     <p>$ ${productPrice}</p>
                                 </div>
-                                <div id="prodID_${productID}" class="card-footer text-white bg-primary">
+                                <div id="prodID_${productID}" class="card-footer btnAdd2Cart text-white bg-primary">
                                     <span>Add to cart</span>
                                     <i class="fas fa-cart-plus "></i>
                                 </div>
@@ -52,64 +45,60 @@ async function getAllProducts() {
     } else if (products.length < 1 && cards.length < 1) {
         cards.push(errorMessage);
     }
-    return cards;
+    cardContainer.innerHTML = cards.join("");
 }
 
 // Function to talk to the server and return a bunch of products
-async function getAllCategories() {
-    let categories = [];
-    let cards = [];
-    const errorMessage =
-        "<p>We don't currently have any items in stock, but feel free to add your own product/s </p>";
-
-    await fetch("https://fakestoreapi.com/products/categories", {
-        method: "GET",
-        mode: "cors",
-    })
-        .then((response) => response.json())
-        .then((data) => (categories = data))
-        .catch((_) => cards.push(errorMessage));
-    if (categories.length > 0 && cards.length < 1) {
+async function updateCategoryMenu() {
+    let categories = await getAllCategories();
+    let lstCategories = [
+        '<li><a class="dropdown-item text-dark" onclick="updateCards(getAllProducts());">ALL</a></li>',
+    ];
+    if (categories.length > 0 && lstCategories.length < 2) {
         for (category of categories) {
-            let card = `
+            let dropdown = `
                  <li>
-                    <a class="dropdown-item text-light" href="#">${category.toUpperCase()}</a>
+                    <a class="dropdown-item text-dark">${category.toUpperCase()}</a>
                 </li>
             `;
-            cards.push(card);
+            lstCategories.push(dropdown);
         }
-    } else if (categories.length < 1 && cards.length < 1) {
-        cards.push(errorMessage);
+    } else if (categories.length < 1 && lstCategories.length < 1) {
+        lstCategories.push(errorMessage);
     }
-    return cards;
+    categoryMenu.innerHTML = lstCategories.join("");
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-    let cards = await getAllProducts();
-    document.querySelector("#card-container").innerHTML = cards.join("");
-    let catMenu = await getAllCategories();
-    document.querySelector("#dropdown-menu").innerHTML = catMenu.join("");
+    await updateCards(getAllProducts());
+    await updateCategoryMenu();
+    document.querySelectorAll(".dropdown-item").forEach((categoryMenu) => {
+        categoryMenu.addEventListener("click", async function () {
+            categoryMenu == "ALL"
+                ? await updateCards(getAllProducts())
+                : await updateCards(
+                      getProductsInCategory(
+                          categoryMenu.innerText.toLowerCase()
+                      )
+                  );
+        });
+    });
+    addToCart();
 });
 
-let totalPrice = 0;
-const teste = () => {
-    if (products.length > 0) {
-        const btnAdd2Cart = document.querySelectorAll(".card-footer");
-        btnAdd2Cart.forEach((btn) => {
+const addToCart = () => {
+    if (cards.length > 0) {
+        document.querySelectorAll(".btnAdd2Cart").forEach((btn) => {
             btn.addEventListener("click", async function () {
-                let productID = this.id;
-                console.log(productID);
-                let productPrice = document.querySelector(productID).innerText;
-                totalPrice += parseFloat(productPrice);
-                document.querySelector(".totalPrice").innerText = totalPrice;
+                console.log(btn);
             });
         });
     }
 };
 
-var myModal = document.getElementById("myModal");
-var myInput = document.getElementById("myInput");
+// var myModal = document.getElementById("myModal");
+// var myInput = document.getElementById("myInput");
 
-myModal.addEventListener("shown.bs.modal", function () {
-    myInput.focus();
-});
+// myModal.addEventListener("shown.bs.modal", function () {
+//     myInput.focus();
+// });
