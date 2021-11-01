@@ -3,7 +3,7 @@
 It is a simple e-commerce site that consumes [FakeStoreAPI](https://fakestoreapi.com/)
 
 - [X] It shows the all products
-- [ ] The customer can filter products based on its category
+- [X] The customer can filter products based on its category
 - [ ] The customer can add products to the cart
 - [ ] The customer can remove products from the cart
 - [ ] The customer see the cart

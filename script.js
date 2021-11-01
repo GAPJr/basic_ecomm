@@ -2,6 +2,26 @@ let products = [];
 let cards = [];
 let cardContainer = document.querySelector("#card-container");
 let categoryMenu = document.querySelector("#dropdown-menu");
+let updateCategoryItens = () => document
+    .querySelectorAll(".dropdown-item")
+    .forEach((categoryMenu) => {
+        categoryMenu.addEventListener("click", async function () {
+            categoryMenu == "ALL"
+                ? await updateCards(getAllProducts())
+                : await updateCards(
+                      getProductsInCategory(
+                          categoryMenu.innerText.toLowerCase()
+                      )
+                  );
+        });
+    });
+
+document.addEventListener("DOMContentLoaded", async function () {
+    await updateCards(getAllProducts());
+    await updateCategoryMenu();
+    updateCategoryItens();
+    addToCart();
+});
 // Function to talk to the server and return a bunch of products
 async function updateCards(productList) {
     cards = [];
@@ -69,22 +89,7 @@ async function updateCategoryMenu() {
     categoryMenu.innerHTML = lstCategories.join("");
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
-    await updateCards(getAllProducts());
-    await updateCategoryMenu();
-    document.querySelectorAll(".dropdown-item").forEach((categoryMenu) => {
-        categoryMenu.addEventListener("click", async function () {
-            categoryMenu == "ALL"
-                ? await updateCards(getAllProducts())
-                : await updateCards(
-                      getProductsInCategory(
-                          categoryMenu.innerText.toLowerCase()
-                      )
-                  );
-        });
-    });
-    addToCart();
-});
+
 
 const addToCart = () => {
     if (cards.length > 0) {

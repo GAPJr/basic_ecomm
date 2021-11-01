@@ -8,7 +8,7 @@
 
 ## Functionality
 
-- [ ] Filter products based on its category
+- [X] Filter products based on its category
 - [ ] Add product to card button
 - [ ] List products in the cart (modal)
 - [ ] Add user login
