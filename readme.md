@@ -2,16 +2,17 @@
 
 It is a simple e-commerce site that consumes [FakeStoreAPI](https://fakestoreapi.com/)
 
-- [X] It shows the all products
-- [X] The customer can filter products based on its category
-- [ ] The customer can add products to the cart
-- [ ] The customer can remove products from the cart
-- [ ] The customer see the cart
-- [ ] The customer can checkout
+-   [x] It shows the all products
+-   [x] The customer can filter products based on its category
+-   [ ] The customer can add products to the cart
+-   [ ] The customer can remove products from the cart
+-   [X] The customer see the cart
+-   [ ] The customer can checkout
 
 ## OSS Libraries
 
 ### [Bootstrap](https://getbootstrap.com/) - License
+
 The MIT License (MIT)
 
 Copyright (c) 2011-2021 Twitter, Inc.
@@ -36,6 +37,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ### [FontAwesome](https://fontawesome.com/) - License
+
 Font Awesome Free is free, open source, and GPL friendly. You can use it for commercial projects, open source projects, or really almost whatever you want.
 
 Icons — CC BY 4.0 License

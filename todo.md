@@ -3,16 +3,15 @@
 ## Design
 - [ ] Make all product cards with same height
 - [ ] Make product font smaller (ref.: [amazon](http://www.amazon.com))
-- [ ] Change category backgrounf color 
+- [X] Change category background color 
 - [ ] Create carrousel 
 
 ## Functionality
 
 - [X] Filter products based on its category
-- [ ] Add product to card button
+- [X] Add product to card button
 - [ ] List products in the cart (modal)
-- [ ] Add user login
-- [ ] Implement additional REST from APIs
+- [X] Implement additional REST from APIs
  
 ## Best Practices
 

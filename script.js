@@ -1,58 +1,69 @@
 let products = [];
+let categories = [];
 let cards = [];
-let cardContainer = document.querySelector("#card-container");
-let categoryMenu = document.querySelector("#dropdown-menu");
-let updateCategoryItens = () => document
-    .querySelectorAll(".dropdown-item")
-    .forEach((categoryMenu) => {
-        categoryMenu.addEventListener("click", async function () {
-            categoryMenu == "ALL"
-                ? await updateCards(getAllProducts())
-                : await updateCards(
-                      getProductsInCategory(
-                          categoryMenu.innerText.toLowerCase()
-                      )
-                  );
-        });
-    });
+let cart = [];
+
+const cardContainer = document.querySelector("#card-container");
+const categoryMenu = document.querySelector(".navbar-nav");
+const categoryNavItem = document.querySelectorAll(".nav-item");
+const removeBtnClass = () =>
+    document
+        .querySelectorAll(".nav-item")
+        .forEach((test) => test.children[0].classList.remove("btn-danger"));
 
 document.addEventListener("DOMContentLoaded", async function () {
-    await updateCards(getAllProducts());
-    await updateCategoryMenu();
-    updateCategoryItens();
-    addToCart();
+    if (buscaDadosDoStorage("products")) {
+        products = buscaDadosDoStorage("products");
+    } else {
+        products = await getAllProducts();
+    }
+    cards = await updateCards(products);
+    salvarDadosNoStorage("products", products);
+
+    if (buscaDadosDoStorage("categories")) {
+        categories = buscaDadosDoStorage("categories");
+    } else {
+        categories = await getAllCategories();
+    }
+    salvarDadosNoStorage("categories", categories);
+    await updateCategoryMenu(categories);
+
+    updateCardsBasedOnCategoryItem();
 });
-// Function to talk to the server and return a bunch of products
-async function updateCards(productList) {
+
+const updateCards = async (productList) => {
     cards = [];
     let products = await productList;
-    if (products.length > 0 && cards.length < 1) {
-        for (const index in products) {
-            let product = products[index];
-
-            let productID = product.id;
-            let productName = product.title;
-            let productImageURL = product.image;
-            let productPrice = product.price;
-            let productDescription = product.description;
+    if (products.length > 0) {
+        for (let product of products) {
+            // let productID = product.id;
+            // let productDescription = product.description;
 
             let card = `
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 card-deck">
                     <div class="card my-3 rounded-3 shadow-sm text-center ">
-                        <div class="card-title text-white p-2 bg-danger">${productName}</div>    
+                        <div class="card-title text-dark p-2 bg-light">${product.title}</div>    
+                        <div class="product-caption">
                         <img
-                                class="card-img-center w-auto p-5 mh-100"
-                                src="${productImageURL}"
+                                class="img-thumbnail mx-auto d-block"
+                                src="${product.image}"
                                 alt=""
                             />
-                        <div class="card-body product-caption">
+                        </div>
+                        <div class="card-body">
                             <div class="card_area">
-                                <div class="product_count_area">
-                                    <p>$ ${productPrice}</p>
+                                <div class="">
+                                    <p>$ ${product.price}</p>
                                 </div>
-                                <div id="prodID_${productID}" class="card-footer btnAdd2Cart text-white bg-primary">
-                                    <span>Add to cart</span>
-                                    <i class="fas fa-cart-plus "></i>
+                                <div id="product_${product.id}" class="btnAddRemoveCart">
+                                    <div class="card-footer text-white bg-primary">
+                                        <span>Add to cart</span>
+                                        <i class="fas fa-cart-plus "></i>
+                                    </div>
+                                    <div class="card-footer text-white bg-secondary d-none">
+                                        <span>Remove from cart</span>
+                                        <i class="fas fa-trash-alt"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -62,23 +73,24 @@ async function updateCards(productList) {
 
             cards.push(card);
         }
-    } else if (products.length < 1 && cards.length < 1) {
+    } else {
         cards.push(errorMessage);
     }
+    salvarDadosNoStorage("products", products);
     cardContainer.innerHTML = cards.join("");
-}
+    btnAddRemoveToCart();
+    return cards;
+};
 
-// Function to talk to the server and return a bunch of products
-async function updateCategoryMenu() {
-    let categories = await getAllCategories();
+const updateCategoryMenu = async (categories) => {
     let lstCategories = [
-        '<li><a class="dropdown-item text-dark" onclick="updateCards(getAllProducts());">ALL</a></li>',
+        '<li class="nav-item"><a class="btn btn-secondary text-light p-2 m-1 nav-link">ALL</a></li>',
     ];
     if (categories.length > 0 && lstCategories.length < 2) {
         for (category of categories) {
             let dropdown = `
-                 <li>
-                    <a class="dropdown-item text-dark">${category.toUpperCase()}</a>
+                 <li class="nav-item">
+                    <a class="btn btn-secondary text-light p-2 m-1 nav-link">${category.toUpperCase()}</a>
                 </li>
             `;
             lstCategories.push(dropdown);
@@ -87,23 +99,96 @@ async function updateCategoryMenu() {
         lstCategories.push(errorMessage);
     }
     categoryMenu.innerHTML = lstCategories.join("");
-}
-
-
-
-const addToCart = () => {
-    if (cards.length > 0) {
-        document.querySelectorAll(".btnAdd2Cart").forEach((btn) => {
-            btn.addEventListener("click", async function () {
-                console.log(btn);
-            });
-        });
-    }
+    return categories;
 };
 
-// var myModal = document.getElementById("myModal");
-// var myInput = document.getElementById("myInput");
+const updateCardsBasedOnCategoryItem = () =>
+    document.querySelectorAll(".nav-item").forEach((categoryMenu) => {
+        categoryMenu.addEventListener("click", async function () {
+            removeBtnClass();
+            categoryMenu.children[0].textContent == "ALL"
+                ? await updateCards(getAllProducts())
+                : await updateCards(
+                      getProductsInCategory(
+                          categoryMenu.innerText.toLowerCase()
+                      )
+                  );
+            this.children[0].classList.add("btn-danger");
+        });
+    });
+let test;
+const btnAddRemoveToCart = () => {
+    document.querySelectorAll(".btnAddRemoveCart").forEach((btn) => {
+        btn.addEventListener("click", async function () {
+            if (
+                cart.length == 0 ||
+                cart.filter(
+                    (product) => product.id == this.id.split("_")[1]
+                ).length == 0
+            ) {
+                let product = products.filter(
+                    (product) => product.id == this.id.split("_")[1]
+                )[0];
+                cart.push(product);
+                salvarDadosNoStorage("cart", cart);
+                updateCartTable(cart);
+                this.children[0].classList.add("d-none");
+                this.children[1].classList.remove("d-none");
+            } else if ( cart.length != 0 &&
+                cart.filter(
+                    (product) => product.id == this.id.split("_")[1]
+                ).length != 0) {
+                // let product = products.filter(
+                //     (product) => product.id == this.id.split("_")[1]
+                // )[0];
+                cart.length == 1 ? cart.splice(cart.indexOf(product),1) : cart.pop();
+                salvarDadosNoStorage("cart", cart);
+                updateCartTable(cart);
+                this.children[0].classList.remove("d-none");
+                this.children[1].classList.add("d-none");
+            }
+        });
+    });
+};
 
-// myModal.addEventListener("shown.bs.modal", function () {
-//     myInput.focus();
-// });
+const updateCartTable = (productsOnCart) => {
+    let cartTable = [];
+    if (productsOnCart.length > 0) {
+        for (let product of productsOnCart) {
+            let cartItem = `
+                <tr>
+                    <td>${product.id}</td>
+                    <td>${product.title}</td>
+                    <td>$ ${product.price}</td>
+                    <td>
+                        <input class="form-control productQtdOnCart" type="number" min="0" value='1'>
+                    </td>
+                    <td>$ ${product.price}</td>
+                </tr>
+            `;
+            cartTable.push(cartItem);
+        }
+    } else {
+        cartTable.push(errorMessage);
+    }
+    document.querySelector(".cart-table").innerHTML = cartTable.join("");
+    productQtdOnCart();
+    document.querySelector(".qtdProductsOnCart").innerHTML =
+        productsOnCart.length;
+};
+
+const productQtdOnCart = () => {
+    document
+        .querySelectorAll(".productQtdOnCart")
+        .forEach((productQtdOnCart) => {
+            productQtdOnCart.addEventListener("change", function () {
+                console.log(this.value);
+                let price =
+                    productQtdOnCart.parentElement.parentElement.children[2]
+                        .textContent;
+                let total = Number(this.value) * Number(price.split(" ")[1]);
+                productQtdOnCart.parentElement.parentElement.children[4].textContent =
+                    "$ " + total;
+            });
+        });
+};
