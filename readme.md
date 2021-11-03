@@ -1,4 +1,4 @@
-# Glaubs e-Comm
+# [Glaubs e-Comm](https://glaubs-ecomm.vercel.app/)
 
 It is a simple e-commerce site that consumes [FakeStoreAPI](https://fakestoreapi.com/)
 
