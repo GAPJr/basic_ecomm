@@ -40,30 +40,26 @@ const updateCards = async (productList) => {
             // let productDescription = product.description;
 
             let card = `
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 card-deck">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                     <div class="card my-3 rounded-3 shadow-sm text-center ">
-                        <div class="card-title text-dark p-2 bg-light">${product.title}</div>    
-                        <div class="product-caption">
-                        <img
-                                class="img-thumbnail mx-auto d-block"
-                                src="${product.image}"
-                                alt=""
-                            />
+                        <div className="card-header">
+                            <h5 class="card-title">${product.title}</h5>
                         </div>
-                        <div class="card-body">
-                            <div class="card_area">
-                                <div class="">
-                                    <p>$ ${product.price}</p>
-                                </div>
-                                <div id="product_${product.id}" class="btnAddRemoveCart">
-                                    <div class="card-footer text-white bg-primary">
-                                        <span>Add to cart</span>
-                                        <i class="fas fa-cart-plus "></i>
-                                    </div>
-                                    <div class="card-footer text-white bg-secondary d-none">
-                                        <span>Remove from cart</span>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </div>
+                        <div class="card-body h-50">
+                            <img
+                                    class="card-img-top w-50 h-50"
+                                    src="${product.image}"
+                                    alt=""
+                                />
+                            <p>$ ${product.price}</p>
+                            <div id="product_${product.id}" class="btnAddRemoveCart">
+                                <p class="card-footer text-white bg-primary">
+                                    <span>Add to cart</span>
+                                    <i class="fas fa-cart-plus "></i>
+                                </p>
+                                <div class="card-footer text-white bg-secondary d-none">
+                                    <span>Remove from cart</span>
+                                    <i class="fas fa-trash-alt"></i>
                                 </div>
                             </div>
                         </div>
@@ -138,9 +134,9 @@ const btnAddRemoveToCart = () => {
                 cart.filter(
                     (product) => product.id == this.id.split("_")[1]
                 ).length != 0) {
-                // let product = products.filter(
-                //     (product) => product.id == this.id.split("_")[1]
-                // )[0];
+                let product = products.filter(
+                    (product) => product.id == this.id.split("_")[1]
+                )[0];
                 cart.length == 1 ? cart.splice(cart.indexOf(product),1) : cart.pop();
                 salvarDadosNoStorage("cart", cart);
                 updateCartTable(cart);
