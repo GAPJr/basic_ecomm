@@ -40,9 +40,9 @@ const updateCards = async (productList) => {
             // let productDescription = product.description;
 
             let card = `
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                    <div class="card my-3 rounded-3 shadow-sm text-center ">
-                        <div className="card-header">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 my-3">
+                    <div class="card rounded-3 shadow-sm text-center ">
+                        <div class="card-header">
                             <h5 class="card-title">${product.title}</h5>
                         </div>
                         <div class="card-body h-50">
@@ -52,15 +52,15 @@ const updateCards = async (productList) => {
                                     alt=""
                                 />
                             <p>$ ${product.price}</p>
-                            <div id="product_${product.id}" class="btnAddRemoveCart">
-                                <p class="card-footer text-white bg-primary">
-                                    <span>Add to cart</span>
-                                    <i class="fas fa-cart-plus "></i>
-                                </p>
-                                <div class="card-footer text-white bg-secondary d-none">
-                                    <span>Remove from cart</span>
-                                    <i class="fas fa-trash-alt"></i>
-                                </div>
+                        </div>
+                        <div id="product_${product.id}" class="btnAddRemoveCart">
+                            <div class="card-footer text-white bg-primary">
+                                <span>Add to cart</span>
+                                <i class="fas fa-cart-plus "></i>
+                            </div>
+                            <div class="card-footer text-white bg-secondary d-none">
+                                <span>Remove from cart</span>
+                                <i class="fas fa-trash-alt"></i>
                             </div>
                         </div>
                     </div>
