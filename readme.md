@@ -1,10 +1,10 @@
-# Glaubs e-Comm
+# [Glaubs e-Comm](https://glaubs-ecomm.vercel.app/)
 
 It is a simple e-commerce site that consumes [FakeStoreAPI](https://fakestoreapi.com/)
 
 -   [x] It shows the all products
 -   [x] The customer can filter products based on its category
--   [ ] The customer can add products to the cart
+-   [X] The customer can add products to the cart
 -   [ ] The customer can remove products from the cart
 -   [X] The customer see the cart
 -   [ ] The customer can checkout
